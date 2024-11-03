@@ -2,9 +2,9 @@ import pygame
 from dataclasses import dataclass
 from typing import List, Tuple
 
-CELL_SIZE = 40
-ROWS = 20
-COLS = 20
+CELL_SIZE = 20
+ROWS = 30
+COLS = 30
 
 @dataclass
 class Cell:
