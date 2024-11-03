@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "Conway's Game of Life"
+version = "1.0.0"
+description = "A non-deterministic implementation of Conway's Game of Life using CUDA and Pygame."
+authors = "Carboveanu David"
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pygame = "^2.0"
+cuda-python = "^12.6"
+numpy = "^1.21"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
