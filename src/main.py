@@ -4,7 +4,7 @@ import pygame
 from pygame.examples.grid import WINDOW_HEIGHT, WINDOW_WIDTH
 
 from src import __version__
-from src.gui import *
+from gui import *
 # from src.game_logic import GameLogic
 
 WINDOW_WIDTH = 600
@@ -56,12 +56,7 @@ def main():
         #window.fill((0, 0, 0)) # fill the window with black (can be other color)
         back_buffer.fill((0, 0, 0))
 
-        for row in grid:
-            for cell in row:
-                rect = pygame.Rect(cell.x, cell.y, CELL_SIZE, CELL_SIZE)
-                color = (0, 255, 0) if cell.is_active else (255, 255, 255)
-                pygame.draw.rect(back_buffer, color, rect)
-                pygame.draw.rect(back_buffer, (0, 0, 0), rect, 1)
+        draw_grid(back_buffer, grid)
 
         #game_logic.draw(window)
 
