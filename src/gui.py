@@ -40,12 +40,13 @@ def initialize_gui(window: pygame.Surface) -> List[List[Cell]]:
 
     return grid
 
-def toggle_cell_state(grid: List[List[Cell]], mouse_pos: Tuple[int, int]) -> None:
+def toggle_cell_state(grid: List[List[Cell]], mouse_pos: Tuple[int, int], single_click: bool = False) -> None:
     """Toggle the state of a cell when clicked.
 
     Args:
         grid (List[List[Cell]]): The grid of cells.
         mouse_pos (Tuple[int, int]): The x and y coordinates of the mouse position.
+        single_click (bool): If True, toggles the cell state; if False, sets the cell to active.
 
     Returns:
         None
@@ -55,4 +56,7 @@ def toggle_cell_state(grid: List[List[Cell]], mouse_pos: Tuple[int, int]) -> Non
 
     if 0 <= row < len(grid) and 0 <= col < len(grid[0]):
         cell = grid[row][col]
-        cell.is_active = not cell.is_active
+        if single_click:
+            cell.is_active = not cell.is_active
+        else:
+            cell.is_active = True
