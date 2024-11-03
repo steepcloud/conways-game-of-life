@@ -2,9 +2,9 @@ import pygame
 from dataclasses import dataclass
 from typing import List, Tuple
 
-CELL_SIZE = 40
-ROWS = 20
-COLS = 20
+CELL_SIZE = 20
+ROWS = 30
+COLS = 30
 
 @dataclass
 class Cell:
@@ -39,6 +39,23 @@ def initialize_gui(window: pygame.Surface) -> List[List[Cell]]:
             pygame.draw.rect(window, BLACK, rect, 1)
 
     return grid
+
+def draw_grid(window: pygame.Surface, grid: List[List[Cell]]) -> None:
+    """Draw the grid of cells on the window.
+
+    Args:
+        window (pygame.Surface): The surface to draw on.
+        grid (List[List[Cell]]): The grid of cells.
+
+    Returns:
+        None
+    """
+    for row in grid:
+        for cell in row:
+            rect = pygame.Rect(cell.x, cell.y, CELL_SIZE, CELL_SIZE)
+            color = (0, 255, 0) if cell.is_active else (255, 255, 255)
+            pygame.draw.rect(window, color, rect)
+            pygame.draw.rect(window, (0, 0, 0), rect, 1)
 
 def toggle_cell_state(grid: List[List[Cell]], mouse_pos: Tuple[int, int], single_click: bool = False) -> None:
     """Toggle the state of a cell when clicked.
