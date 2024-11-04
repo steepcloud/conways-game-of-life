@@ -24,11 +24,11 @@ def main():
     game_logic = GameLogic(grid)
 
     '''Ensuring load_state works'''
-    try:
-        game_logic.load_state('game_state.pkl')
-    except FileNotFoundError:
-        print("No saved game state found. Starting with a new grid.")
-        game_logic._initialize_grid("tub")
+    #try:
+    #    game_logic.load_state('game_state.pkl')
+    #except FileNotFoundError:
+    #    print("No saved game state found. Starting with a new grid.")
+    #    game_logic._initialize_grid("tub")
 
     #game_logic._initialize_grid("tub")
 
@@ -60,6 +60,12 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     simulation_running = not simulation_running
+                elif event.key == pygame.K_c:
+                    contagious_pos = pygame.mouse.get_pos()
+                    toggle_cell_state(grid, contagious_pos, single_click=True, contagious=True)
+                elif event.key == pygame.K_d:
+                    defensive_pos = pygame.mouse.get_pos()
+                    toggle_cell_state(grid, defensive_pos, single_click=True, defensive=True)
 
         if mouse_dragging:
             mouse_pos = pygame.mouse.get_pos()
@@ -70,17 +76,9 @@ def main():
         if simulation_running:
             game_logic.update()
 
-        #window.fill((0, 0, 0)) # fill the window with black (can be other color)
         back_buffer.fill((0, 0, 0))
-
-        draw_grid(back_buffer, game_logic.grid)
-
+        draw_grid(back_buffer, grid)
         grid = game_logic.grid
-
-        #game_logic.draw(window)
-
-        #initialize_gui(window)
-
         window.blit(back_buffer, (0, 0))
         pygame.display.flip()
         clock.tick(10)
