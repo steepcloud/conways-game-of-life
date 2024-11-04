@@ -53,7 +53,7 @@ def draw_grid(window: pygame.Surface, grid: List[List[Cell]]) -> None:
     for row in grid:
         for cell in row:
             rect = pygame.Rect(cell.x, cell.y, CELL_SIZE, CELL_SIZE)
-            color = (0, 255, 0) if cell.is_active else (255, 255, 255)
+            color = (0, 255, 0) if cell.is_active else (128, 128, 128)
             pygame.draw.rect(window, color, rect)
             pygame.draw.rect(window, (0, 0, 0), rect, 1)
 
