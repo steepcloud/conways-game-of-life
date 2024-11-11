@@ -4,6 +4,9 @@ import pickle
 from gui import Cell, CELL_SIZE
 from main import WINDOW_HEIGHT, WINDOW_WIDTH
 import random as rd
+import numpy as np
+
+from src.cuda_kernels import run_cuda_kernels
 
 BASE_REVIVAL_PROB = 0.02  # Base probability of revival for sparse grids
 MAX_REVIVAL_PROB = 0.10   # Maximum allowed revival probability for very sparse grids
@@ -58,39 +61,15 @@ class GameLogic:
 
     def update(self) -> None:
         """Apply conditional non-deterministic update rules to the grid with dynamic revival probability."""
-        # Calculate the current population density
-        active_cells = sum(cell.is_active for row in self.grid for cell in row)
-        total_cells = len(self.grid) * len(self.grid[0])
-        density = active_cells / total_cells if total_cells > 0 else 0
 
-        # Adjust revival probability based on population density (sparser -> higher revival chance)
-        adjusted_revival_prob = BASE_REVIVAL_PROB + (1 - density) * (MAX_REVIVAL_PROB - BASE_REVIVAL_PROB)
+        grid_data = self.get_current_state()
+        grid_array = np.array(grid_data, dtype=bool)
 
-        new_grid = [[Cell(cell.x, cell.y) for cell in row] for row in self.grid]
+        updated_grid_data = run_cuda_kernels(grid_array, DEATH_PROB, BASE_REVIVAL_PROB, MAX_REVIVAL_PROB)
 
-        for row in range(len(self.grid)):
-            for col in range(len(self.grid[0])):
-                live_neighbors = self.count_neighbors(row, col)
-                cell = self.grid[row][col]
-
-                if cell.is_active:
-                    # Standard rule for overcrowding with a small chance of death
-                    if live_neighbors not in (2, 3):
-                        if live_neighbors > 3 and rd.random() < DEATH_PROB:
-                            new_grid[row][col].is_active = False
-                        else:
-                            new_grid[row][col].is_active = False
-                    else:
-                        new_grid[row][col].is_active = True
-                else:
-                    # Dead cells revive based on exact neighbors or with adjusted revival probability
-                    if live_neighbors == 3:
-                        new_grid[row][col].is_active = True
-                    elif live_neighbors in (2, 4) and rd.random() < adjusted_revival_prob:
-                        new_grid[row][col].is_active = True
-
-        # Update the grid with the new generation
-        self.grid = new_grid
+        for y in range(len(self.grid)):
+            for x in range(len(self.grid[0])):
+                self.grid[y][x].is_active = updated_grid_data[y, x]
 
     def count_neighbors(self, row: int, col: int) -> int:
         return sum(
