@@ -1,13 +1,8 @@
-from pickle import FALSE
-
-import pygame
-from pygame.examples.grid import WINDOW_HEIGHT, WINDOW_WIDTH
+from utils import WINDOW_HEIGHT, WINDOW_WIDTH
 
 from src import __version__
 from gui import *
 
-WINDOW_WIDTH = 600
-WINDOW_HEIGHT = 600
 
 def main():
     from game_logic import GameLogic
@@ -23,15 +18,6 @@ def main():
 
     game_logic = GameLogic(grid)
 
-    '''Ensuring load_state works'''
-    #try:
-    #    game_logic.load_state('game_state.pkl')
-    #except FileNotFoundError:
-    #    print("No saved game state found. Starting with a new grid.")
-    #    game_logic._initialize_grid("tub")
-
-    #game_logic._initialize_grid("tub")
-
     running = True
     mouse_dragging = False
     mouse_clicked_pos = None
@@ -42,8 +28,6 @@ def main():
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                '''Testing save_state (can be further used in future)'''
-                # game_logic.save_state('game_state.pkl')
                 running = False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -58,14 +42,22 @@ def main():
                     mouse_clicked_pos = None
 
             if event.type == pygame.KEYDOWN:
+                # pause the simulation
                 if event.key == pygame.K_SPACE:
                     simulation_running = not simulation_running
-                elif event.key == pygame.K_c:
-                    contagious_pos = pygame.mouse.get_pos()
-                    toggle_cell_state(grid, contagious_pos, single_click=True, contagious=True)
-                elif event.key == pygame.K_d:
-                    defensive_pos = pygame.mouse.get_pos()
-                    toggle_cell_state(grid, defensive_pos, single_click=True, defensive=True)
+                # save the grid state (ctrl+S)
+                elif event.key == pygame.K_s and pygame.key.get_mods() & pygame.KMOD_CTRL:
+                    if not simulation_running:  # ensuring the simulation is paused when trying to save grid state
+                        game_logic.save_state('game_state.pkl')
+                        print("Game state saved.")
+                # load the grid state (ctrl+L)
+                elif event.key == pygame.K_l and pygame.key.get_mods() & pygame.KMOD_CTRL:
+                    if not simulation_running:  # ensuring the simulation is paused when trying to load grid state
+                        try:
+                            game_logic.load_state('game_state.pkl')
+                            print("Game state loaded.")
+                        except FileNotFoundError:
+                            print("No saved game state found.")
 
         if mouse_dragging:
             mouse_pos = pygame.mouse.get_pos()
