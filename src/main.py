@@ -60,12 +60,6 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     simulation_running = not simulation_running
-                elif event.key == pygame.K_c:
-                    contagious_pos = pygame.mouse.get_pos()
-                    toggle_cell_state(grid, contagious_pos, single_click=True, contagious=True)
-                elif event.key == pygame.K_d:
-                    defensive_pos = pygame.mouse.get_pos()
-                    toggle_cell_state(grid, defensive_pos, single_click=True, defensive=True)
 
         if mouse_dragging:
             mouse_pos = pygame.mouse.get_pos()
