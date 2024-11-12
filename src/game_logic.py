@@ -45,8 +45,9 @@ class GameLogic:
             if 0 <= row < len(self.grid) and 0 <= col < len(self.grid[0]):
                 self.grid[row][col].is_active = True
 
-    def get_current_state(self) -> List[List[bool]]:
-        return [[cell.is_active for cell in row] for row in self.grid]
+    def get_current_state(self) -> np.ndarray:
+        #return [[cell.is_active for cell in row] for row in self.grid]
+        return np.array([[cell.is_active for cell in row] for row in self.grid], dtype=np.bool_)
 
     def save_state(self, filename: str) -> None:
         with open(filename, 'wb') as file:
