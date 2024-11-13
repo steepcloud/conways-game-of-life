@@ -64,9 +64,8 @@ class GameLogic:
         """Apply conditional non-deterministic update rules to the grid with dynamic revival probability."""
 
         grid_data = self.get_current_state()
-        grid_array = np.array(grid_data, dtype=bool)
 
-        updated_grid_data = run_cuda_kernels(grid_array, DEATH_PROB, BASE_REVIVAL_PROB, MAX_REVIVAL_PROB)
+        updated_grid_data = run_cuda_kernels(grid_data, DEATH_PROB, BASE_REVIVAL_PROB, MAX_REVIVAL_PROB)
 
         for y in range(len(self.grid)):
             for x in range(len(self.grid[0])):
