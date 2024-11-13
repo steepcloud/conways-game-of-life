@@ -25,9 +25,10 @@ def count_neighbors_kernel(grid, neighbor_count, width, height):
         for dy in range(-1, 2):
             if dx == 0 and dy == 0:
                 continue
-            nx, ny = x + dx, y + dy
-            if 0 <= nx < width and 0 <= ny < height:
-                live_neighbors += grid[ny, nx]
+
+            nx, ny = (x + dx) % width, (y + dy) % height
+
+            live_neighbors += grid[ny, nx]
 
     neighbor_count[y, x] = live_neighbors
 
