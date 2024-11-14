@@ -1,10 +1,8 @@
 import pygame
 from dataclasses import dataclass
 from typing import List, Tuple
+from utils import CELL_SIZE, ROWS, COLS, WHITE, BLACK, GREEN
 
-CELL_SIZE = 10
-ROWS = 60
-COLS = 60
 
 @dataclass
 class Cell:
@@ -22,11 +20,6 @@ def initialize_gui(window: pygame.Surface) -> List[List[Cell]]:
     Returns:
         List[List[Cell]]: A 2D list representing the grid of cells.
     """
-    # defining colors
-    WHITE = (255, 255, 255)
-    BLACK = (0, 0, 0)
-    GREEN = (0, 255, 0)
-
     grid = [[Cell(x=col * CELL_SIZE, y=row * CELL_SIZE) for col in range(COLS)] for row in range(ROWS)]
 
     for row in grid:

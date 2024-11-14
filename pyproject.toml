@@ -6,7 +6,7 @@ authors = "Carboveanu David"
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.11"
 pygame = "^2.0"
 cuda-python = "^12.6"
 numpy = "^1.21"
