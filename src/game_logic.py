@@ -94,8 +94,6 @@ class GameLogic:
 
     def count_neighbors(self, row: int, col: int) -> int:
         return sum(
-            self.grid[neighbor_row][neighbor_col].is_active
-            for direction in [1j, 1, -1j, -1, 1j - 1, 1j + 1, -1j - 1, -1j + 1]
-            if (0 <= (neighbor_row := row + int(direction.imag)) < len(self.grid) and
-                0 <= (neighbor_col := col + int(direction.real)) < len(self.grid[0]))
+            self.grid[(row + dr) % len(self.grid)][(col + dc) % len(self.grid[0])].is_active
+            for dr in [-1, 0, 1] for dc in [-1, 0, 1] if (dr, dc) != (0, 0)
         )
