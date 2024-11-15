@@ -69,3 +69,7 @@ The program will open a graphical window where you can observe the simulation. Y
 - Clicking on cells / drag 'n' click to toggle their state.
 - Pausing and resuming the simulation.
 - Saving and loading grid states. (ctrl+S, ctrl+L) (while simulation is paused)
+
+## Demo
+Below is a preview of the simulation in action:
+![Simulation Demo](example/demo.gif)
