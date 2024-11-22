@@ -5,10 +5,12 @@ from gui import Cell
 from utils import WINDOW_WIDTH, WINDOW_HEIGHT, CELL_SIZE, BASE_REVIVAL_PROB, MAX_REVIVAL_PROB, DEATH_PROB
 import random as rd
 from concurrent.futures import ThreadPoolExecutor
+from threading import Lock
 
 @dataclass
 class GameLogic:
     grid: List[List[Cell]]
+    lock: Lock = Lock()
 
     def _initialize_grid(self, pattern: str) -> None:
         """Initialize the grid with a given pattern.
@@ -119,11 +121,8 @@ class GameLogic:
 
         # using ThreadPoolExecutor to parallelize the update process
         with ThreadPoolExecutor() as executor:
-            futures = []
-
-            for row in range(len(self.grid)):
-                futures.append(executor.submit(self.update_row, row, new_grid, adjusted_revival_prob))
-
+            futures = [executor.submit(self.update_row, row, new_grid, adjusted_revival_prob)
+                       for row in range(len(self.grid))]
             for future in futures:
                 future.result()
 
@@ -171,7 +170,8 @@ class GameLogic:
         This method checks the eight surrounding cells (including diagonals) and counts how many are active.
         It handles edge wrapping by using modulo arithmetic to ensure the grid wraps around at the edges (toroidal array).
         """
-        return sum(
-            self.grid[(row + dr) % len(self.grid)][(col + dc) % len(self.grid[0])].is_active
-            for dr in [-1, 0, 1] for dc in [-1, 0, 1] if (dr, dc) != (0, 0)
-        )
+        with self.lock:
+            return sum(
+                self.grid[(row + dr) % len(self.grid)][(col + dc) % len(self.grid[0])].is_active
+                for dr in [-1, 0, 1] for dc in [-1, 0, 1] if (dr, dc) != (0, 0)
+            )
